@@ -13,6 +13,11 @@ void PlayerGUI::releaseResources()
 {
     playerAudio.releaseResources();
 }
+void PlayerGUI::timerCallback()
+{
+    // double currentValue = playerAudio.getPosition();
+    timeSlider.setValue(playerAudio.getPosition());
+}
 void PlayerGUI::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colours::darkgrey);
@@ -32,7 +37,10 @@ PlayerGUI::PlayerGUI()
     volumeSlider.setValue(0.2);
     volumeSlider.addListener(this);
     addAndMakeVisible(volumeSlider);
-
+    addAndMakeVisible(timeSlider);
+    timeSlider.setRange(0.0, 100.0);
+    timeSlider.setValue(0.0);
+    //timeSlider.addListener(this);
 }
 void PlayerGUI::resized()
 {
@@ -49,6 +57,8 @@ void PlayerGUI::resized()
     nextButton.setBounds(440, y, 80, 40);*/
 
     volumeSlider.setBounds(20, 100, getWidth() - 40, 30);
+    timeSlider.setBounds(20, 200, getWidth() - 40, 30);
+
 }
 PlayerGUI::~PlayerGUI()
 {
@@ -76,6 +86,8 @@ void PlayerGUI::buttonClicked(juce::Button* button)
                 if (file.existsAsFile())
                 {
                     playerAudio.loadFile(file);
+                    timeSlider.setRange(0.0, playerAudio.getLength());
+                    startTimer(1000);
                 }
 
             });
@@ -125,5 +137,6 @@ void PlayerGUI::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &volumeSlider)
         playerAudio.setGain((float)slider->getValue());
-    
+    if (slider == &timeSlider)
+        playerAudio.setPosition((float)slider->getValue());
 }
