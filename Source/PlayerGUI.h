@@ -21,12 +21,18 @@ public:
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
     void releaseResources();
     void timerCallback() override;
+    void openFileChooser();
 
+    int getNumRows() override;
+    void paintListBoxItem(int rowNumber, juce::Graphics& g,
+        int width, int height, bool rowIsSelected) override;
+    void selectedRowsChanged(int lastRowSelected) override;
     void load_and_play(const juce::File& file);
 
 private:
     PlayerAudio playerAudio;
-
+    juce::Array<juce::File> files;
+    int currentIndex = 0;
 
     // GUI elements
     juce::ListBox playlistBox{ "Playlist", this };
@@ -37,10 +43,15 @@ private:
     juce::TextButton pauseButton{ "||" };
     juce::TextButton muteButton{ "Mute" };
     juce::TextButton loopButton{ "loop" };
+    juce::TextButton addButton{ "Add files to playlist" };
+    juce::TextButton playfileButton{ "play file" };
     juce::Slider volumeSlider;
     juce::Slider timeSlider;
+    juce::Slider speedSlider;
+    juce::Label file_name;
+    juce::Label file_lenght;
 
-    
+
 
     std::unique_ptr<juce::FileChooser> fileChooser;
 
