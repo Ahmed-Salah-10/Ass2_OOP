@@ -1,5 +1,6 @@
 
 #include "PlayerAudio.h"
+#include <JuceHeader.h>
 PlayerAudio::PlayerAudio()
 {
     formatManager.registerBasicFormats();
@@ -26,7 +27,7 @@ bool PlayerAudio::loadFile(const juce::File& file)
 {
     if (file.existsAsFile())
     {
-        if (auto* reader = formatManager.createReaderFor(file))
+        if (reader = formatManager.createReaderFor(file))
         {
             // ?? Disconnect old source first
             transportSource.stop();
@@ -71,3 +72,30 @@ double PlayerAudio::getLength() const
 {
     return transportSource.getLengthInSeconds();
 }
+
+bool PlayerAudio::is_playing() const
+{
+    return transportSource.isPlaying();
+}
+
+bool PlayerAudio::has_finish() const
+{
+    return transportSource.hasStreamFinished();
+}
+
+void PlayerAudio::setSpeed(double ratio)
+{
+    if (readerSource)
+    {
+        transportSource.setSource(readerSource.get(),
+            0,
+            nullptr,
+            reader->sampleRate * ratio);
+        transportSource.start();
+    }
+}
+
+
+
+
+

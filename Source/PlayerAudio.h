@@ -1,5 +1,6 @@
 #pragma once							// PlayerAudio.h
 #include <JuceHeader.h>
+#include<iostream>
 
 class PlayerAudio
 {
@@ -18,8 +19,12 @@ public:
     void setPosition(double pos);
     double getPosition() const;
     double getLength() const;
+    bool is_playing() const;
+    bool has_finish() const;
+    void setSpeed(double ratio);
 
 private:
+    juce::AudioFormatReader* reader = nullptr;
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::AudioTransportSource transportSource;
